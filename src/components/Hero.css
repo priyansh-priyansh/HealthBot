@@ -1,0 +1,371 @@
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 50%, #1a1a1a 100%);
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(255, 107, 53, 0.1) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.hero-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  width: 100%;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero-intro {
+  margin-bottom: 1rem;
+}
+
+.intro-text {
+  font-size: 1.1rem;
+  color: #e0e0e0;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.hero-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.headline-modern {
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: #ff6b35;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.headline-care {
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: #ff6b35;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.headline-perfect {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  color: #ff6b35;
+}
+
+.hero-footer {
+  margin-top: auto;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.award {
+  font-size: 0.9rem;
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.location {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
+
+.hero-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.medical-visual {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brain-icon {
+  position: relative;
+  z-index: 3;
+  animation: float 3s ease-in-out infinite;
+}
+
+.brain-svg {
+  width: 120px;
+  height: 120px;
+  color: #ff6b35;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.5));
+}
+
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #ff6b35;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: pulse 2s ease-out infinite;
+}
+
+.pulse-ring:nth-child(2) {
+  width: 200px;
+  height: 200px;
+}
+
+.pulse-ring:nth-child(3) {
+  width: 250px;
+  height: 250px;
+  animation-delay: 0.5s;
+}
+
+.pulse-ring:nth-child(4) {
+  width: 300px;
+  height: 300px;
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.doctors-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.doctors-title {
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.doctors-carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.doctor-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 120px;
+  padding: 1rem;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  transition: all 0.3s ease;
+}
+
+.doctor-card:hover {
+  background: rgba(255, 107, 53, 0.2);
+  transform: translateY(-2px);
+}
+
+.doctor-avatar {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doctor-icon {
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+
+.doctor-name {
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+}
+
+.carousel-nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.next-btn {
+  background: none;
+  border: none;
+  color: #ff6b35;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.next-btn:hover {
+  color: #fff;
+  transform: translateX(5px);
+}
+
+.doctors-footer {
+  margin-top: auto;
+}
+
+.tech-info {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .hero-left {
+    order: 1;
+  }
+
+  .hero-center {
+    order: 2;
+  }
+
+  .hero-right {
+    order: 3;
+  }
+
+  .headline-modern,
+  .headline-care,
+  .headline-perfect {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 100px;
+  }
+
+  .hero-container {
+    padding: 0 1rem;
+  }
+
+  .headline-modern,
+  .headline-care,
+  .headline-perfect {
+    font-size: 2rem;
+  }
+
+  .medical-visual {
+    width: 250px;
+    height: 250px;
+  }
+
+  .brain-svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .pulse-ring:nth-child(2) {
+    width: 150px;
+    height: 150px;
+  }
+
+  .pulse-ring:nth-child(3) {
+    width: 200px;
+    height: 200px;
+  }
+
+  .pulse-ring:nth-child(4) {
+    width: 250px;
+    height: 250px;
+  }
+}
