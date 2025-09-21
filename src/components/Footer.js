@@ -28,59 +28,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="footer-section">
-            <h3 className="footer-title">Home</h3>
-            <ul className="footer-links">
-              <li>
-                <a href="#diagnosis">Symptom Checker</a>
-              </li>
-              <li>
-                <a href="#Home">Health Analysis</a>
-              </li>
-              <li>
-                <a href="#prevention">Preventive Care</a>
-              </li>
-              <li>
-                <a href="#emergency">Emergency Guide</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h3 className="footer-title">Resources</h3>
-            <ul className="footer-links">
-              <li>
-                <a href="#about">About Us</a>
-              </li>
-              <li>
-                <a href="#privacy">Privacy Policy</a>
-              </li>
-              <li>
-                <a href="#terms">Terms of Service</a>
-              </li>
-              <li>
-                <a href="#help">Help Center</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h3 className="footer-title">Contact</h3>
-            <div className="contact-info">
-              <div className="contact-item">
-                <Mail className="contact-icon" />
-                <span>support@healthbot.ai</span>
-              </div>
-              <div className="contact-item">
-                <Phone className="contact-icon" />
-                <span>+1 (555) 123-4567</span>
-              </div>
-              <div className="contact-item">
-                <MapPin className="contact-icon" />
-                <span>Global • Online Service</span>
-              </div>
-            </div>
-          </div>
+   
         </div>
 
         <div className="footer-bottom">
