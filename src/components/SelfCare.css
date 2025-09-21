@@ -1,0 +1,254 @@
+.self-care {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  position: relative;
+  min-height: 100vh;
+}
+
+.self-care::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 50% 20%,
+    rgba(255, 107, 53, 0.08) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+.self-care-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.self-care-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.self-care-title {
+  margin-top: 1.5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.self-care-subtitle {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.self-care-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.self-care-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.self-care-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.self-care-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(255, 107, 53, 0.4);
+  box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+}
+
+.self-care-card:hover::before {
+  opacity: 1;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.tip-item:last-child {
+  margin-bottom: 0;
+}
+
+.tip-bullet {
+  width: 6px;
+  height: 6px;
+  background: #ff6b35;
+  border-radius: 50%;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+.self-care-footer {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.footer-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 50px;
+  padding: 1.5rem 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.message-icon {
+  font-size: 1.5rem;
+}
+
+.message-text {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .self-care-container {
+    padding: 0 1rem;
+  }
+
+  .self-care-title {
+    font-size: 2.2rem;
+  }
+
+  .self-care-subtitle {
+    font-size: 1rem;
+  }
+
+  .self-care-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .self-care-card {
+    padding: 1.5rem;
+  }
+
+  .card-header {
+    gap: 0.75rem;
+  }
+
+  .card-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .footer-message {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .message-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .self-care {
+    padding: 2rem 0;
+  }
+
+  .self-care-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .self-care-title {
+    font-size: 1.8rem;
+  }
+
+  .self-care-card {
+    padding: 1.25rem;
+  }
+
+  .tip-item {
+    font-size: 0.9rem;
+  }
+}

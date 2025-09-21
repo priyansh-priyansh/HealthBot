@@ -73,7 +73,7 @@ const Hero = () => {
                   <div className="doctor-avatar">
                     <Shield className="doctor-icon" />
                   </div>
-                  <span className="doctor-name">Dr. HealthBot</span>
+                  <span className="doctor-name">Dr. Niramaya</span>
                 </div>
               </div>
 

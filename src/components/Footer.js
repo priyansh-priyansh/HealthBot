@@ -29,13 +29,13 @@ const Footer = () => {
           </div>
 
           <div className="footer-section">
-            <h3 className="footer-title">Services</h3>
+            <h3 className="footer-title">Home</h3>
             <ul className="footer-links">
               <li>
                 <a href="#diagnosis">Symptom Checker</a>
               </li>
               <li>
-                <a href="#services">Health Analysis</a>
+                <a href="#Home">Health Analysis</a>
               </li>
               <li>
                 <a href="#prevention">Preventive Care</a>

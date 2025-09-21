@@ -1,5 +1,6 @@
 import React from "react";
 import { Stethoscope, Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import "./Header.css";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -11,29 +12,29 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         {/* Logo */}
-        <div className="logo">
+        <Link to="/" className="logo">
           <Stethoscope className="logo-icon" />
-          <span className="logo-text">HealthBot</span>
-        </div>
+          <span className="logo-text">Niramaya</span>
+        </Link>
 
         {/* Navigation */}
         <nav className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
-          <a href="#services" className="nav-link">
+          <Link to="/" className="nav-link">
             <span className="nav-bullet"></span>
-            Services
-          </a>
+            Home
+          </Link>
           <a href="#diagnosis" className="nav-link">
             <span className="nav-bullet"></span>
             Diagnosis
           </a>
-          <a href="#pricing" className="nav-link">
+          <Link to="/self-care" className="nav-link">
             <span className="nav-bullet"></span>
-            Pricing
-          </a>
-          <a href="#prevention" className="nav-link">
+            Self-Care
+          </Link>
+          <Link to="/about" className="nav-link">
             <span className="nav-bullet"></span>
-            Prevention
-          </a>
+            About
+          </Link>
         </nav>
 
         {/* CTA Button / Logout */}
