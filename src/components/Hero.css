@@ -243,6 +243,8 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 107, 53, 0.2);
   transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
 .doctor-card:hover {

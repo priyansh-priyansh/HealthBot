@@ -68,7 +68,7 @@ const Login = () => {
           <div className="login-header">
             <div className="login-logo">
               <Stethoscope className="logo-icon" />
-              <span className="logo-text">HealthBot</span>
+              <span className="logo-text">Niramaya</span>
             </div>
             <h1 className="login-title">
               {isLogin ? "Welcome Back" : "Create Account"}

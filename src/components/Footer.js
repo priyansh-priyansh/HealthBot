@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="footer-section">
             <div className="footer-logo">
               <Stethoscope className="logo-icon" />
-              <span className="logo-text">HealthBot</span>
+              <span className="logo-text">Niramaya</span>
             </div>
             <p className="footer-description">
               AI-powered healthcare solutions for better health outcomes. Get
@@ -33,7 +33,7 @@ const Footer = () => {
 
         <div className="footer-bottom">
           <div className="footer-bottom-content">
-            <p className="copyright">© 2025 HealthBot. All rights reserved.</p>
+            <p className="copyright">© 2025 Niramaya. All rights reserved.</p>
             <div className="footer-disclaimer">
               <p>
                 This service is for informational purposes only and should not

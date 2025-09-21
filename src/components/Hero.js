@@ -69,17 +69,15 @@ const Hero = () => {
                   <span className="doctor-name">Dr. AI Assistant</span>
                 </div>
 
-                <div className="doctor-card">
+                <a href="#diagnosis" className="doctor-card">
                   <div className="doctor-avatar">
                     <Shield className="doctor-icon" />
                   </div>
                   <span className="doctor-name">Dr. Niramaya</span>
-                </div>
+                </a>
               </div>
 
-              <div className="carousel-nav">
-                <button className="next-btn">Next →</button>
-              </div>
+              
 
               <div className="doctors-footer">
                 <span className="tech-info">Advanced AI Technologies</span>
