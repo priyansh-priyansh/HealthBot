@@ -15,7 +15,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { login } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,33 +31,23 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
       if (isLogin) {
-        // Login logic
-        if (formData.email && formData.password) {
-          login({
-            name: formData.name || "User",
-            email: formData.email,
-          });
-          navigate("/");
-        } else {
-          setError("Please fill in all required fields");
-        }
+        await signIn({ email: formData.email, password: formData.password });
       } else {
-        // Register logic
-        if (formData.name && formData.email && formData.password) {
-          login({
-            name: formData.name,
-            email: formData.email,
-          });
-          navigate("/");
-        } else {
-          setError("Please fill in all fields");
-        }
+        await signUp({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
       }
+      navigate("/");
+    } catch (err) {
+      const message = err?.message || "Authentication failed";
+      setError(message);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -147,15 +137,13 @@ const Login = () => {
 
             {error && <div className="error-message">{error}</div>}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="login-button"
-            >
+            <button type="submit" disabled={loading} className="login-button">
               {loading ? (
                 <div className="loading-spinner"></div>
+              ) : isLogin ? (
+                "Sign In"
               ) : (
-                isLogin ? "Sign In" : "Create Account"
+                "Create Account"
               )}
             </button>
           </form>

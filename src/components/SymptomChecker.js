@@ -8,8 +8,22 @@ import {
   CheckCircle,
 } from "lucide-react";
 import "./SymptomChecker.css";
+import { askGemini } from "../services/gemini";
+import { db } from "../firebase";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 
 const SymptomChecker = () => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -21,210 +35,100 @@ const SymptomChecker = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+    } else {
+      // fallback
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // AI-powered disease prediction based on symptoms
-  const predictDisease = (symptoms) => {
-    const symptomLower = symptoms.toLowerCase();
-    const predictions = [];
+  useEffect(() => {
+    setErrorText("");
+    if (!user) return;
 
-    // Common disease patterns
-    const diseasePatterns = {
-      common_cold: {
-        keywords: [
-          "cough",
-          "runny nose",
-          "sneezing",
-          "sore throat",
-          "congestion",
-          "headache",
-          "fatigue",
-        ],
-        symptoms: [
-          "Runny or stuffy nose",
-          "Sore throat",
-          "Cough",
-          "Sneezing",
-          "Headache",
-          "Body aches",
-        ],
-        description: "A viral infection of the upper respiratory tract",
-        severity: "Mild",
-        recommendations: [
-          "Rest",
-          "Stay hydrated",
-          "Use saline nasal spray",
-          "Gargle with salt water",
-        ],
-      },
-      flu: {
-        keywords: [
-          "fever",
-          "chills",
-          "body aches",
-          "fatigue",
-          "headache",
-          "cough",
-          "sore throat",
-        ],
-        symptoms: [
-          "High fever",
-          "Chills and sweats",
-          "Muscle aches",
-          "Headache",
-          "Dry cough",
-          "Fatigue",
-        ],
-        description:
-          "Influenza - a viral infection affecting the respiratory system",
-        severity: "Moderate to Severe",
-        recommendations: [
-          "Rest",
-          "Stay hydrated",
-          "Antiviral medication if prescribed",
-          "Monitor fever",
-        ],
-      },
-      migraine: {
-        keywords: [
-          "headache",
-          "migraine",
-          "nausea",
-          "vomiting",
-          "sensitivity",
-          "light",
-          "sound",
-        ],
-        symptoms: [
-          "Severe headache",
-          "Nausea",
-          "Vomiting",
-          "Sensitivity to light and sound",
-          "Aura",
-        ],
-        description: "A neurological condition causing severe headaches",
-        severity: "Moderate to Severe",
-        recommendations: [
-          "Rest in dark room",
-          "Avoid triggers",
-          "Over-the-counter pain relief",
-          "Consult neurologist if frequent",
-        ],
-      },
-      anxiety: {
-        keywords: [
-          "anxiety",
-          "worry",
-          "panic",
-          "nervous",
-          "restless",
-          "trouble sleeping",
-          "irritability",
-        ],
-        symptoms: [
-          "Excessive worry",
-          "Restlessness",
-          "Trouble sleeping",
-          "Irritability",
-          "Panic attacks",
-        ],
-        description:
-          "A mental health condition characterized by excessive worry and fear",
-        severity: "Mild to Severe",
-        recommendations: [
-          "Deep breathing exercises",
-          "Regular exercise",
-          "Adequate sleep",
-          "Consider therapy",
-        ],
-      },
-      depression: {
-        keywords: [
-          "depression",
-          "sad",
-          "hopeless",
-          "tired",
-          "sleep",
-          "appetite",
-          "concentration",
-        ],
-        symptoms: [
-          "Persistent sadness",
-          "Loss of interest",
-          "Fatigue",
-          "Sleep disturbances",
-          "Appetite changes",
-        ],
-        description:
-          "A mood disorder affecting how you feel, think, and handle daily activities",
-        severity: "Moderate to Severe",
-        recommendations: [
-          "Seek professional help",
-          "Regular exercise",
-          "Maintain routine",
-          "Connect with others",
-        ],
-      },
-      allergies: {
-        keywords: [
-          "allergies",
-          "allergic",
-          "sneezing",
-          "itchy",
-          "watery eyes",
-          "rash",
-          "hives",
-        ],
-        symptoms: [
-          "Sneezing",
-          "Itchy, watery eyes",
-          "Runny nose",
-          "Skin rash",
-          "Hives",
-        ],
-        description:
-          "An immune system reaction to substances that are typically harmless",
-        severity: "Mild to Moderate",
-        recommendations: [
-          "Avoid allergens",
-          "Antihistamines",
-          "Nasal sprays",
-          "Allergy testing",
-        ],
-      },
+    const messagesRef = collection(db, "chats", user.id, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"), limit(200));
+
+    const loadHistoryFallback = async () => {
+      try {
+        const snap = await getDocs(messagesRef);
+        if (snap.empty) return;
+        const loaded = snap.docs
+          .map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              type: data.role === "assistant" ? "bot" : "user",
+              content: data.content,
+              timestamp: data.createdAt?.toDate?.() || new Date(),
+            };
+          })
+          .sort((a, b) => a.timestamp - b.timestamp);
+        setMessages(loaded);
+        setErrorText("");
+      } catch (err) {
+        console.error("Firestore fallback getDocs error:", err);
+        setErrorText("Couldn't load history. Please try again later.");
+      }
     };
 
-    // Check for matching patterns
-    Object.entries(diseasePatterns).forEach(([disease, data]) => {
-      const matchCount = data.keywords.filter((keyword) =>
-        symptomLower.includes(keyword)
-      ).length;
-
-      if (matchCount > 0) {
-        predictions.push({
-          disease,
-          ...data,
-          confidence: Math.min((matchCount / data.keywords.length) * 100, 95),
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        if (snapshot.empty) return;
+        const loaded = snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            type: data.role === "assistant" ? "bot" : "user",
+            content: data.content,
+            timestamp: data.createdAt?.toDate?.() || new Date(),
+          };
         });
+        setMessages(loaded);
+        setErrorText("");
+      },
+      async (err) => {
+        console.error("Firestore onSnapshot error:", err);
+        await loadHistoryFallback();
       }
-    });
+    );
 
-    // Sort by confidence
-    predictions.sort((a, b) => b.confidence - a.confidence);
+    return () => unsubscribe();
+  }, [user]);
 
-    return predictions.slice(0, 3); // Return top 3 predictions
+  const persistMessage = async ({ role, content }) => {
+    if (!user) return;
+    try {
+      const messagesRef = collection(db, "chats", user.id, "messages");
+      await addDoc(messagesRef, {
+        role, // "user" | "assistant"
+        content,
+        email: user.email,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.error("Failed to persist message:", e);
+      setErrorText("Couldn't save your message. It will still appear locally.");
+    }
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || !user) return;
 
     const userMessage = {
       id: Date.now(),
@@ -234,53 +138,39 @@ const SymptomChecker = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const prompt = inputValue;
     setInputValue("");
     setIsTyping(true);
+    setErrorText("");
 
-    // Simulate AI processing time
-    setTimeout(() => {
-      const predictions = predictDisease(inputValue);
+    try {
+      await persistMessage({ role: "user", content: prompt });
 
-      let botResponse = "Based on your symptoms, here's what I found:\n\n";
-
-      if (predictions.length === 0) {
-        botResponse +=
-          "I couldn't find a specific match for your symptoms. This could be due to:\n";
-        botResponse += "• Symptoms not matching common patterns\n";
-        botResponse += "• Need for more specific information\n";
-        botResponse += "• A condition requiring professional evaluation\n\n";
-        botResponse +=
-          "Please provide more details about your symptoms, or consult with a healthcare professional for a proper diagnosis.";
-      } else {
-        predictions.forEach((prediction, index) => {
-          botResponse += `**${index + 1}. ${prediction.disease
-            .replace("_", " ")
-            .toUpperCase()}**\n`;
-          botResponse += `Confidence: ${Math.round(prediction.confidence)}%\n`;
-          botResponse += `Description: ${prediction.description}\n`;
-          botResponse += `Severity: ${prediction.severity}\n`;
-          botResponse += `Common Symptoms: ${prediction.symptoms.join(", ")}\n`;
-          botResponse += `Recommendations: ${prediction.recommendations.join(
-            ", "
-          )}\n\n`;
-        });
-
-        botResponse += "⚠️ **Important Disclaimer:**\n";
-        botResponse +=
-          "This analysis is for informational purposes only and should not replace professional medical advice. Please consult with a healthcare provider for proper diagnosis and treatment.";
-      }
-
+      const aiText = await askGemini(prompt);
       const botMessage = {
         id: Date.now() + 1,
         type: "bot",
-        content: botResponse,
+        content:
+          aiText || "I'm sorry, I couldn't generate a response right now.",
         timestamp: new Date(),
-        predictions: predictions,
       };
-
       setMessages((prev) => [...prev, botMessage]);
+      await persistMessage({ role: "assistant", content: botMessage.content });
+    } catch (e) {
+      console.error("Chat handleSendMessage error:", e);
+      const botMessage = {
+        id: Date.now() + 1,
+        type: "bot",
+        content: `I ran into a problem: ${
+          e?.message || "Unknown error"
+        }. Please try again shortly.`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, botMessage]);
+      await persistMessage({ role: "assistant", content: botMessage.content });
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -301,7 +191,7 @@ const SymptomChecker = () => {
         </div>
 
         <div className="chat-container">
-          <div className="messages-container">
+          <div className="messages-container" ref={messagesContainerRef}>
             {messages.map((message) => (
               <div key={message.id} className={`message ${message.type}`}>
                 <div className="message-avatar">
@@ -359,13 +249,18 @@ const SymptomChecker = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Describe your symptoms in detail..."
+                placeholder={
+                  user
+                    ? "Describe your symptoms in detail..."
+                    : "Please sign in to chat"
+                }
                 className="message-input"
                 rows="3"
+                disabled={!user}
               />
               <button
                 onClick={handleSendMessage}
-                disabled={!inputValue.trim() || isTyping}
+                disabled={!inputValue.trim() || isTyping || !user}
                 className="send-button"
               >
                 <Send className="send-icon" />

@@ -1,4 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { auth } from "../firebase";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 
 const AuthContext = createContext();
 
@@ -15,36 +23,59 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on app start
-    const savedUser = localStorage.getItem("healthbot_user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const mappedUser = {
+          id: firebaseUser.uid,
+          name:
+            firebaseUser.displayName ||
+            firebaseUser.email?.split("@")[0] ||
+            "User",
+          email: firebaseUser.email || "",
+          avatar: firebaseUser.photoURL || null,
+          loginTime: new Date().toISOString(),
+        };
+        setUser(mappedUser);
+        localStorage.setItem("healthbot_user", JSON.stringify(mappedUser));
+      } else {
+        setUser(null);
+        localStorage.removeItem("healthbot_user");
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const login = (userData) => {
-    const user = {
-      id: Date.now(),
-      name: userData.name,
-      email: userData.email,
-      avatar: userData.avatar || null,
-      loginTime: new Date().toISOString(),
-    };
-    setUser(user);
-    localStorage.setItem("healthbot_user", JSON.stringify(user));
+  const signUp = async ({ name, email, password }) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    if (name) {
+      await updateProfile(cred.user, { displayName: name });
+    }
+    return cred.user;
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("healthbot_user");
+  const signIn = async ({ email, password }) => {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    return cred.user;
+  };
+
+  const signOutUser = async () => {
+    await signOut(auth);
   };
 
   const value = {
     user,
-    login,
-    logout,
     loading,
+    // kept for backward compatibility; no-ops in Firebase flow
+    login: (userData) => {
+      console.warn(
+        "Deprecated: use signIn/signUp from AuthContext instead of login()"
+      );
+      return signIn({ email: userData.email, password: userData.password });
+    },
+    logout: signOutUser,
+    signIn,
+    signUp,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,9 +1,11 @@
 import React from "react";
 import { Stethoscope, Menu, X } from "lucide-react";
 import "./Header.css";
+import { useAuth } from "../contexts/AuthContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <header className="header">
@@ -34,8 +36,14 @@ const Header = () => {
           </a>
         </nav>
 
-        {/* CTA Button */}
-        <button className="cta-button">Health Check</button>
+        {/* CTA Button / Logout */}
+        {user ? (
+          <button className="cta-button" onClick={logout}>
+            Logout
+          </button>
+        ) : (
+          <button className="cta-button">Health Check</button>
+        )}
 
         {/* Mobile Menu Toggle */}
         <button
