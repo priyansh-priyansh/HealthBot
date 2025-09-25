@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import Login from "./components/Login";
 import SelfCare from "./components/SelfCare";
 import About from "./components/About";
+import Diagnosis from "./components/Diagnosis";
 import "./App.css";
 
 function HomePage() {
@@ -52,6 +53,18 @@ function AboutPage() {
   );
 }
 
+function DiagnosisPage() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Diagnosis />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
@@ -79,6 +92,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <HomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/diagnosis"
+              element={
+                <ProtectedRoute>
+                  <DiagnosisPage />
                 </ProtectedRoute>
               }
             />

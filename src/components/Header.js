@@ -23,10 +23,10 @@ const Header = () => {
             <span className="nav-bullet"></span>
             Home
           </Link>
-          <a href="#diagnosis" className="nav-link">
+          <Link to="/diagnosis" className="nav-link">
             <span className="nav-bullet"></span>
             Diagnosis
-          </a>
+          </Link>
           <Link to="/self-care" className="nav-link">
             <span className="nav-bullet"></span>
             Self-Care
