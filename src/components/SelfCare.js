@@ -16,7 +16,7 @@ const SelfCare = () => {
     {
       id: "food-nutrition",
       icon: "🥗",
-      title: "Khana (Food & Nutrition)",
+      title: "Food & Nutrition",
       tips: [
         "Eat balanced meals with fruits, vegetables, whole grains, and proteins.",
         "Avoid oily and junk food; prefer home-cooked meals.",
